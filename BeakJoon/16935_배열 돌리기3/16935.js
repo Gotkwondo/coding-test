@@ -7,7 +7,7 @@ const array = input.map(e => e.split(' ').map(e => +e.trim()));
 
 // 상하 반전
 const first = (arr) => {
-  return arr.reverse();
+  return arr.reverse()
 }
 
 const second = (arr) => {
