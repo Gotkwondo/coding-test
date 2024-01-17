@@ -1,6 +1,5 @@
 const solution = (picks, minerals) => {
   let answer = 0;
-  let arr = [...picks];
   let newMinerals = [];
   const obj = [
     { "diamond": 1, "iron": 1, "stone": 1 },
@@ -12,7 +11,7 @@ const solution = (picks, minerals) => {
     return array.filter((e) => e === word).length;
   }
     
-  minerals = minerals.slice(0, arr.reduce((acc, cur) => acc + cur, 0) * 5);
+  minerals = minerals.slice(0, picks.reduce((acc, cur) => acc + cur, 0) * 5);
     
   for (let i = 0; i < minerals.length; i += 5) {
     newMinerals.push(minerals.slice(i, i + 5));
