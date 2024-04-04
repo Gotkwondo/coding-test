@@ -18,7 +18,7 @@
 //   }
 //   return answer;
 // }
-
+//
 const solution = (n) => {
   let answer = 0;
   if (n === 1) return 1;
