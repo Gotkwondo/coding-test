@@ -1,15 +1,29 @@
 const solution = (n, left, right) => {
-  let arr = []
+  let answer = [];
     
   for (let i = left; i <= right; i++) {
-    let row = i % n;
-    let col = Math.floor(i / n);
-    let num = col;
+    const row = Math.floor(i / n);
+    const col = i % n;
+    let num = row;
         
-    if (row > col) {
-      num = row;
-    }
-    arr.push(num + 1);
+    if (row < col) num = col;
+    answer.push(num + 1);
   }
-  return arr;
-}
+  return answer;
+};
+
+// const solution = (n, left, right) => {
+//   let arr = []
+    
+//   for (let i = left; i <= right; i++) {
+//     let row = i % n;
+//     let col = Math.floor(i / n);
+//     let num = col;
+        
+//     if (row > col) {
+//       num = row;
+//     }
+//     arr.push(num + 1);
+//   }
+//   return arr;
+// };
