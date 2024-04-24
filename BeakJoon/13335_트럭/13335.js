@@ -22,4 +22,4 @@ while (que.length) {
   }
 }
 
-console.log(time)
+console.log(time);
