@@ -2,24 +2,23 @@ const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
   .toString().trim().split('\n')
 
-const [N, W, L] = input.shift().split(' ').map(Number);
-let arr = input[0].split(' ').map(Number)
+const [N, L] = input.shift().split(' ');
+let arr = input.map(e => e.trim());
 
-let que = [[1 + W, arr[0]]];
-let weight = arr.shift();
-let time = 1;
+// 두 번째 문제 풀이 방법( Set 자료구조를 이용해 중복된 요소를 정리, 
+// reverse()메서드를 이용해 뒤에서 부터 중복 처리 후 원래대로 
+// reverse()를 이용해 정답 도출 )
+let set = new Set(arr.reverse())
+let answer = [...set].reverse().slice(0, N).join('\n')
+console.log(answer)
 
-while (que.length) {
-  time += 1;
-  if (que[0][0] === time) {
-    const finished = que.shift();
-    weight -= finished[1];
-  }
-  if (arr[0] && que.length + 1 <= W && weight + arr[0] <= L && que.length + 1 <= N) {
-    const newTruck = arr.shift();
-    weight += newTruck;
-    que.push([time + W, newTruck]);
-  }
-}
 
-console.log(time)
+// 첫 번째 문제 풀이 방법(객체를 이용한 풀이)
+// let obj = {};
+
+// arr.forEach((e, i) => {
+//   obj[e] = i;
+// })
+
+// let answer = Object.entries(obj).sort((a, b) => a[1] - b[1]).slice(0, N).map(e => e[0]).join('\n');
+// console.log(answer)
