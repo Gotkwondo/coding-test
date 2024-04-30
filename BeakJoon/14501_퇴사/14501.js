@@ -16,4 +16,4 @@ for (let day = 0; day < N; day++){
   }
 }
 
-console.log(Math.max(...dp))
+console.log(Math.max(...dp));
