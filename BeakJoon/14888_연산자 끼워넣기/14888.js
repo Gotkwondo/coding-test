@@ -13,11 +13,11 @@ let visited = [];
 const dfs = (cnt) => {
   if (cnt === toolNum) {
     let result = nums[0];
-    for (let i = 0; i < toolNum; i++){
+    for (let i = 0; i < toolNum; i++) {
       
       if (visited[i] === '+') result = result + nums[i + 1];
-      else if(visited[i] === '-') result = result - nums[i + 1]; 
-      else if(visited[i] === '*') result = result * nums[i + 1]; 
+      else if (visited[i] === '-') result = result - nums[i + 1];
+      else if (visited[i] === '*') result = result * nums[i + 1];
       else if (visited[i] === '/') {
         if (result < 0) {
           result = -1 * Math.floor((result * -1) / nums[i + 1]);
@@ -30,18 +30,18 @@ const dfs = (cnt) => {
     return;
   }
   else {
-    for (let i = 0; i < 4; i++){
+    for (let i = 0; i < 4; i++) {
       if (tools[i] === 0) continue;
 
       if (i === 0) {
         visited.push('+')
         tools[i] -= 1;
       }
-      else if(i === 1) {
+      else if (i === 1) {
         visited.push('-')
         tools[i] -= 1;
       }
-      else if(i === 2) {
+      else if (i === 2) {
         visited.push('*')
         tools[i] -= 1;
       }
@@ -54,6 +54,6 @@ const dfs = (cnt) => {
       tools[i] += 1;
     }
   }
-}
+};
 dfs(0);
-console.log(`${max}\n${min}`)
+console.log(`${max}\n${min}`);
