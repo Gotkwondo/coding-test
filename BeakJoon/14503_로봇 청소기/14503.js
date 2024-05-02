@@ -34,7 +34,7 @@ const checkCanBack = (y, x, direction) => {
     return [y, x + 1];
   }
   return false;
-}
+};
 
 while (true) {
   // 현재 칸이 0(청소하지 않은) 칸인 경우의 동작
