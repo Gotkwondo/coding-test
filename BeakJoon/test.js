@@ -2,77 +2,214 @@ const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
   .toString().trim().split('\n').map(e => e.split(' ').map(Number))
 
-const [N, M] = input.shift();
-let [y, x, dir] = input.shift();
+const [height, width] = input.shift();
 let map = input.slice();
 let answer = 0;
-const maxAns = map.map(e => e.filter(el => el === 0).length).reduce((acc, cur) => acc + cur, 0);
-const dirArr = [3, 0, 1, 2];
 
-const checkUncleanArea = (y, x) => {
-  if ((y > 1 && y <= N - 2 && map[y - 1][x] === 0) ||
-    (y >= 1 && y < N - 2 && map[y + 1][x] === 0) ||
-    (x > 1 && x <= M - 2  && map[y][x - 1] === 0) ||
-    (x >= 1 && x < M - 2 && map[y][x + 1] === 0)
-  ) {
-    return true;
+//ㅇㅇㅇㅇ 인 블럭
+const case1 = (i, j) => {
+  if (j + 3 < width) {
+    return map[i][j] + map[i][j + 1] + map[i][j + 2] + map[i][j + 3];
   }
-  return false;
-};
-
-const checkCanBack = (y, x, direction) => {
-  if (direction === 0 && y < N - 2 && map[y + 1][x] !== 1) {
-    return [y + 1, x];
-  }
-  else if (direction === 1 && x > 1 && map[y][x - 1] !== 1) {
-    return [y, x - 1];
-  }
-  else if (direction === 2 && y > 1 && map[y - 1][x] !== 1) {
-    return [y - 1, x];
-  }
-  else if (direction === 3 && x < M - 2 && map[y][x + 1] !== 1) {
-    return [y, x + 1];
-  }
-  return false;
+  return 0;
 }
 
-while (true) {
-  // 현재 칸이 0(청소하지 않은) 칸인 경우의 동작
-  if (map[y][x] === 0) {
-    answer += 1;  // 청소를 한 횟수 +1
-    map[y][x] = true;  // 청소했다고 표시
-    if (maxAns === answer) break; // 최대로 청소할 수 있는 경우 청소기 동작 멈춤
+//ㅇ 인 모양
+//ㅇ
+//ㅇ
+//ㅇ
+const case2 = (i, j) => {
+  if (i + 3 < height) {
+    return map[i][j] + map[i + 1][j] + map[i + 2][j] + map[i + 3][j];
   }
-  
-  if (checkUncleanArea(y, x)) {
-    // 반시계 회전, 앞칸 빈칸 경우, 아닌 경우
-    while (true) {
-      dir = dirArr[dir];
-      if (dir === 0 && map[y - 1][x] === 0) {
-        y -= 1;
-        break;
-      }
-      else if (dir === 1 && map[y][x + 1] === 0) {
-        x += 1;
-        break;
-      }
-      else if (dir === 2 && map[y + 1][x] === 0) {
-        y += 1;
-        break;
-      }
-      else if (dir === 3 && map[y][x - 1] === 0) {
-        x -= 1;
-        break;
-      }
-    }
+  return 0;
+}
+
+//ㅇㅇ
+//ㅇㅇ 인 모양
+const case3 = (i, j) => {
+  if (i + 1 < height && j + 1 < width) {
+    return map[i][j] + map[i][j + 1] + map[i + 1][j] + map[i + 1][j + 1];
   }
-  else {
-    // 방향 유지 후진 할 수 있으면 하고, 뒤가 벽이면 끝냄
-    const canBack = checkCanBack(y, x, dir);
-    if (canBack === false) break;
-    y = canBack[0];
-    x = canBack[1];
+  return 0;
+}
+
+//ㅇ
+//ㅇ
+//ㅇㅇ 인 모양
+const case4 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i][j] + map[i + 1][j] + map[i + 2][j] + map[i + 2][j + 1];
+  }
+  return 0;
+}
+
+//ㅇㅇㅇ
+//ㅇ    인 모양
+const case5 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j] + map[i][j + 1] + map[i][j + 2] + map[i + 1][j];
+  }
+  return 0;
+}
+
+//ㅇㅇ
+//  ㅇ
+//  ㅇ 인 모양
+const case6 = (i, j) => {
+  if (i+2 < height && j+1 < width) {
+    return map[i][j] + map[i][j + 1] + map[i + 1][j + 1] + map[i + 2][j + 1];
+  }
+  return 0;
+}
+
+//    ㅇ
+//ㅇㅇㅇ 인 모양
+const case7 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i+1][j] + map[i + 1][j+1] + map[i + 1][j + 2] + map[i][j + 2];
+  }
+  return 0;
+}
+
+//ㅇㅇ
+//ㅇ
+//ㅇ  인 모양
+const case8 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i][j] + map[i][j + 1] + map[i + 1][j] + map[i + 2][j];
+  }
+  return 0;
+}
+
+//ㅇㅇㅇ
+//    ㅇ 인 모양
+const case9 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j] + map[i][j + 1] + map[i][j + 2] + map[i + 1][j + 2];
+  }
+  return 0;
+}
+
+//  ㅇ
+//  ㅇ
+//ㅇㅇ 인 모양
+const case10 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i + 2][j] + map[i + 2][j + 1] + map[i + 1][j + 1] + map[i][j + 1];
+  }
+  return 0;
+}
+
+//ㅇ
+//ㅇㅇㅇ 인 모양
+const case11 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j] + map[i + 1][j] + map[i + 1][j + 1] + map[i + 1][j + 2];
+  }
+  return 0;
+}
+
+//ㅇ
+//ㅇㅇ
+//  ㅇ 인 모양
+const case12 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i][j] + map[i + 1][j] + map[i + 1][j + 1] + map[i + 2][j + 1];
+  }
+  return 0;
+}
+
+//  ㅇㅇ
+//ㅇㅇ   인 모양
+const case13 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i+1][j] + map[i+1][j + 1] + map[i][j + 1] + map[i][j + 2];
+  }
+  return 0;
+}
+
+//  ㅇ
+//ㅇㅇ
+//ㅇ   인 모양
+const case14 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i + 1][j] + map[i + 2][j] + map[i + 1][j + 1] + map[i][j + 1];
+  }
+  return 0;
+}
+
+//ㅇㅇ
+//  ㅇㅇ 인 모양
+const case15 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j] + map[i][j + 1] + map[i + 1][j + 1] + map[i + 1][j + 2];
+  }
+  return 0;
+}
+
+//  ㅇ
+//ㅇㅇㅇ 인 모양
+const case16 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j + 1] + map[i + 1][j] + map[i + 1][j + 1] + map[i + 1][j + 2];
+  }
+  return 0;
+}
+
+//ㅇ
+//ㅇㅇ
+//ㅇ  인 모양
+const case17 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i][j] + map[i + 1][j] + map[i + 2][j] + map[i + 1][j + 1];
+  }
+  return 0;
+}
+
+//ㅇㅇㅇ
+//  ㅇ  인 모양
+const case18 = (i, j) => {
+  if (i + 1 < height && j + 2 < width) {
+    return map[i][j] + map[i][j + 1] + map[i][j + 2] + map[i + 1][j + 1];
+  }
+  return 0;
+}
+
+//  ㅇ
+//ㅇㅇ
+//  ㅇ 인 모양
+const case19 = (i, j) => {
+  if (i + 2 < height && j + 1 < width) {
+    return map[i + 1][j] + map[i][j + 1] + map[i + 1][j + 1] + map[i + 2][j + 1];
+  }
+  return 0;
+}
+
+for (let i = 0; i < height; i++){
+  for (let j = 0; j < width; j++) {
+    answer = Math.max(answer,
+      case1(i, j),
+      case2(i, j),
+      case3(i, j),
+      case4(i, j),
+      case5(i, j),
+      case6(i, j),
+      case7(i, j),
+      case8(i, j),
+      case9(i, j),
+      case10(i, j),
+      case11(i, j),
+      case12(i, j),
+      case13(i, j),
+      case14(i, j),
+      case15(i, j),
+      case16(i, j),
+      case17(i, j),
+      case18(i, j),
+      case19(i, j),
+    )
   }
 }
 
-console.log(answer);
+console.log(answer)
