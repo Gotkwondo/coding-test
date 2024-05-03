@@ -3,7 +3,6 @@ const input = require('fs')
   .toString().trim().split('\n').map(e => e.trim())
 
 let map = input.slice();
-
 let answer = '';
 
 const check = (mapIdx) => {
@@ -11,9 +10,9 @@ const check = (mapIdx) => {
   if (len <= 2) return true;
   let arr = new Array(len - 2).fill(true);
   // 길이
-  for (let i = 1; i < len - 1; i++){
+  for (let i = 1; i < len - 1; i++) {
     const set = new Set();
-    for (let j = 0; j <= len - i - 1; j++){
+    for (let j = 0; j <= len - i - 1; j++) {
       const st = map[mapIdx][j] + map[mapIdx][j + i];
       if (set.has(st)) {
         arr[i - 1] = false;
@@ -23,7 +22,7 @@ const check = (mapIdx) => {
     }
   }
   return arr.some(e => e === true);
-}
+};
 
 for (let i = 0; i < map.length - 1; i++){
   if (check(i)) {
@@ -34,4 +33,4 @@ for (let i = 0; i < map.length - 1; i++){
   }
 }
 
-console.log(answer)
+console.log(answer);
