@@ -1,6 +1,6 @@
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n')
+  .toString().trim().split('\n').map(e => e.trim())
 
 let arr = input.slice(0, 4).map(e => e.split('').map(Number));
 const N = input[4];
