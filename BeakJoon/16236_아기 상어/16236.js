@@ -55,6 +55,7 @@ const bfs = (goals) => {
     }
     
   }
+  
   return goals.map(e => {
     return [...e, visited[e[0]][e[1]]];
   }).sort((a, b) => {
