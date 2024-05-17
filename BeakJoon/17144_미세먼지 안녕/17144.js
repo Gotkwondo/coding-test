@@ -7,7 +7,6 @@ const map = input;
 const filterPos = [];
 const dir = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 let answer = 0;
-
 map.forEach((el, idx) => {
   el.forEach((e, i) => {
     if (e === -1) filterPos.push(idx);
