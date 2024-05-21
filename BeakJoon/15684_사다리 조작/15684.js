@@ -3,7 +3,7 @@ const input = require('fs')
   .toString().trim().split('\n').map(e => e.split(' ').map(Number));
 
 const [n, m, h] = input.shift();
-const ladder = input;6
+const ladder = input;
 const map = Array.from(Array(h + 1), () => Array(n + 1).fill(false));
 let answer = Infinity;
 
@@ -23,7 +23,7 @@ const movingCheck = () => {
   return true;
 }
 
-const dfs = (y, x, depth) => {
+const dfs = (line, depth) => {
   if (depth > 3) {
     return;
   }
@@ -31,15 +31,15 @@ const dfs = (y, x, depth) => {
     if (depth < answer) answer = depth;
     return;
   }
-  for (let i = y; i <= h; i++) {
+  for (let i = line; i <= h; i++) {
     for (let j = 1; j < n; j++) {
       if (map[i][j] || map[i][j - 1] || map[i][j + 1]) continue;
       map[i][j] = true;
-      dfs(i, j, depth + 1);
+      dfs(i, depth + 1);
       map[i][j] = false;
     }
   }
 };
-dfs(1, 1, 0);
+dfs(1, 0);
 
 console.log(answer === Infinity ? -1 : answer);
