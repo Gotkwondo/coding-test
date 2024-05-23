@@ -61,4 +61,4 @@ while (true) {
   cnt++;
 }
 
-console.log(cnt)
+console.log(cnt);
