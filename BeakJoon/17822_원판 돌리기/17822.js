@@ -69,4 +69,4 @@ for (let i = 0; i < t; i++){
 console.log(target.reduce((acc1, cur) => acc1 + cur.reduce((acc2, el) => {
   if (el === 'x') return acc2;
   return acc2 + el;
-}, 0), 0))
+}, 0), 0));
