@@ -14,4 +14,4 @@ for (let i = 1; i < arr.length; i++){
   }
 }
 
-console.log(Math.max(...temp))
+console.log(Math.max(...temp));
