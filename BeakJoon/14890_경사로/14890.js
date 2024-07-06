@@ -1,4 +1,3 @@
-코드
 const { link } = require('fs');
 
 const input = require('fs')
