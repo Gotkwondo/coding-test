@@ -36,4 +36,4 @@ for (let i = 0; i < y; i++) {
   }
 }
 
-console.log(`${pic}\n${maxArea}`)
+console.log(`${pic}\n${maxArea}`);
