@@ -7,7 +7,7 @@ const arr = input[0].split(' ').map(Number);
 const answer = Array.from({ length: n }, () => 0);
 const stack = [];
 
-for (let i = 0; i < arr.length; i++){
+for (let i = 0; i < arr.length; i++) {
   const tower = [arr[i], i + 1];
 
   if (!stack.length) {
@@ -29,4 +29,4 @@ for (let i = 0; i < arr.length; i++){
   }
 }
 
-console.log(answer.join(' '))
+console.log(answer.join(' '));
