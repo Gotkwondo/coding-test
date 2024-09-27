@@ -16,14 +16,13 @@ arr.forEach(([st, ed, co], i) => {
 
 while (que.length > 0) {
   const cur = que.shift();
-  for (let i = 0; i < road[cur].length; i++){
+  for (let i = 0; i < road[cur].length; i++) {
     const [ed, co] = road[cur][i];
     if (ed !== 1 && cost[ed] > cost[cur] + co) {
       cost[ed] = cost[cur] + co;
       que.push(ed);
     }
   }
-  console.log(cost)
 }
 
-console.log(cost[n])
+console.log(cost[n]);
