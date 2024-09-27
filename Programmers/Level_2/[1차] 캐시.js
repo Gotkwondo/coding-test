@@ -1,29 +1,43 @@
-const solution = (cacheSize, cities) => {
-  if (cacheSize === 0) return cities.length * 5;
-    
-  const cache = [];
-  let answer = 0;
-    
-  cities = cities.map(e => e.toLowerCase());
-    
-  for (let i = 0; i < cities.length; i++) {
-    if (!cache.includes(cities[i])) {
-      if (cache.length >= cacheSize) {
-        cache.shift();
-        cache.push(cities[i]);
-      }
-      else cache.push(cities[i]);
-      answer += 5;
+const solution = (s) => {
+  const test = s.slice(1, s.length - 1).replace(/[{}]/g, '').split(',');
+  const map = new Map();
+
+  test.forEach(e => {
+    if (map.has(e)) {
+      map.set(e, map.get(e) + 1);
     }
-    else {
-      const index = cache.indexOf(cities[i]);
-      cache.splice(index, 1);
-      cache.push(cities[i]);
-      answer += 1;
-    }
-  }
-  return answer;
+    else map.set(e, 1);
+  });
+
+  return Array(...map).sort((a, b) => b[1] - a[1]).map(([e, cnt]) => +e);
 };
+
+// const solution = (cacheSize, cities) => {
+//   if (cacheSize === 0) return cities.length * 5;
+    
+//   const cache = [];
+//   let answer = 0;
+    
+//   cities = cities.map(e => e.toLowerCase());
+    
+//   for (let i = 0; i < cities.length; i++) {
+//     if (!cache.includes(cities[i])) {
+//       if (cache.length >= cacheSize) {
+//         cache.shift();
+//         cache.push(cities[i]);
+//       }
+//       else cache.push(cities[i]);
+//       answer += 5;
+//     }
+//     else {
+//       const index = cache.indexOf(cities[i]);
+//       cache.splice(index, 1);
+//       cache.push(cities[i]);
+//       answer += 1;
+//     }
+//   }
+//   return answer;
+// };
 
 // const solution = (cacheSize, cities) => {
 //   let runtime = 0;
