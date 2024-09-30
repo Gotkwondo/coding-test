@@ -1,43 +1,3 @@
-// function solution(n, k, cmd) {
-//   const map = new Map();
-//   const del = [];
-
-//   for (let i = 0; i < n; i++) {
-//     map.set(i, "O");
-//   }
-
-//   for (let i = 0; i < cmd.length; i++) {
-    // if (cmd[i] === "C") {
-    //   map.set(k, "X");
-    //   del.push(k);
-    //   if (map.size > k + 1) {
-    //     if (map.get(k + 1) !== 'X') {
-    //       while (map.get(k + 1) !== 'O') {
-    //         k++;
-    //       }
-    //     }
-    //     else {
-    //       while (map.get(k - 1) !== 'O') {
-    //         k--;
-    //       }
-    //     }
-    //   }
-    // }
-    // else if (cmd[i] === "Z") {
-    //   const last = del.pop();
-    //   map.set(last, 'O');
-    // }
-    // else {
-    //   let [c, d] = cmd[i].split(' ');
-    //   for (let j = 1; j <= d; j++) {
-    //     if (map.get(k + i) === 'X') d++;
-    //   }
-    //   c === "D" ? k += +d : k -= +d;
-    // }
-//   }
-//   return [...map].reduce((acc, cur) => acc + cur[1], '');
-// }
-
 function solution(n, k, cmd) {
     const linked = {
         0: [undefined, 1]
@@ -98,3 +58,42 @@ function solution(n, k, cmd) {
     }
     return Array.from({ length: n }, (_, i) => state[i] ? 'O' : 'X').join('');
 }
+// function solution(n, k, cmd) {
+//   const map = new Map();
+//   const del = [];
+
+//   for (let i = 0; i < n; i++) {
+//     map.set(i, "O");
+//   }
+
+//   for (let i = 0; i < cmd.length; i++) {
+//     if (cmd[i] === "C") {
+//       map.set(k, "X");
+//       del.push(k);
+//       if (map.size > k + 1) {
+//         if (map.get(k + 1) !== 'X') {
+//           while (map.get(k + 1) !== 'O') {
+//             k++;
+//           }
+//         }
+//         else {
+//           while (map.get(k - 1) !== 'O') {
+//             k--;
+//           }
+//         }
+//       }
+//     }
+//     else if (cmd[i] === "Z") {
+//       const last = del.pop();
+//       map.set(last, 'O');
+//     }
+//     else {
+//       let [c, d] = cmd[i].split(' ');
+//       for (let j = 1; j <= d; j++) {
+//         if (map.get(k + i) === 'X') d++;
+//       }
+//       c === "D" ? k += +d : k -= +d;
+//     }
+//   }
+//   return [...map].reduce((acc, cur) => acc + cur[1], '');
+// }
