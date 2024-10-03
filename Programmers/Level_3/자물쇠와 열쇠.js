@@ -27,11 +27,11 @@ function solution(key, lock) {
   for (let i = 0; i < keys.length; i++) {
     const ke = keys[i];
     const keyL = ke.length;
-    console.log(keyL)
+
     for (let j = 0; j < keyL - lL; j++) {
       for (let k = 0; k < keyL - lL; k++) {
         let flag = false;
-        console.log('ddd')
+
         for (let ij = 0; ij < lL; ij++) {
           for (let ik = 0; ik < lL; ik++) {
             if (lock[ij][ik] === 1 && ke[ij + j][ik + k] === 0) continue;
