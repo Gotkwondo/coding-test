@@ -20,7 +20,7 @@ function solution(gems) {
 
   }
   return answer;
-// }
+}
 
 // function solution1(gems) {
 //   const size = new Set(gems).size;
