@@ -78,4 +78,4 @@ for (let i = 0; i < c; i++){
   }
 }
 
-console.log(answer)
+console.log(answer);
