@@ -28,7 +28,7 @@ const melt = () => {
     if (map[y][x] >= v) map[y][x] -= v;
     else map[y][x] = 0;
   });
-}
+};
 
 /**
  * bfs 스타일 검증 함수
@@ -78,6 +78,6 @@ while (true) {
     break;
   }
   year += 1;
-}
+};
 
 console.log(year > 0 ? year : 0);
