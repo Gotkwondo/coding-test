@@ -22,4 +22,4 @@ for (let word of arr) {
   }
   if (!flag) answer++;
 }
-console.log(answer)
+console.log(answer);
