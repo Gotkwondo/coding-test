@@ -31,4 +31,4 @@ for (let i = 0; i < t * 3; i += 3){
   if (flag) answer.push('error');
   else answer.push(`[${test ? arr.slice(lp, rp + 1) : arr.slice(lp, rp + 1).reverse()}]`);
 }
-console.log(answer.join('\n'))
+console.log(answer.join('\n'));
