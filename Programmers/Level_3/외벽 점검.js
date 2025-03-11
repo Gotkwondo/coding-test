@@ -12,8 +12,6 @@ function solution(n, weak, dist) {
     return res;
   };
 
-  let answer = Infinity;
-  let idx = 0;
   let arr = Array.from(
     { length: weak.length * 2 },
     (_, i) => weak[i % weak.length] + (i >= weak.length ? n : 0)

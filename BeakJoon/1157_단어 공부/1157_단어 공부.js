@@ -1,6 +1,10 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n');
+const input = require("fs")
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/example.txt"
+  )
+  .toString()
+  .trim()
+  .split("\n");
 
 const st = input[0].toUpperCase().split("");
 let map = new Map();
