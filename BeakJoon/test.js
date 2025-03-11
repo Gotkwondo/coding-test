@@ -2,15 +2,24 @@ const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
   .toString().trim().split('\n');
 
-const st = input[0].toUpperCase().split("");
-let map = new Map();
-let answer = [];
+const c = +input.shift();
+const arr = input.map(e => {
+  const temp = e.split(' ').map(Number);
+  const t = temp.shift();
+  return [t, temp, 0];
+});
 
-for (let s of st) {
-  map.set(s, map.has(s) ? map.get(s) + 1 : 1);
+for (let i = 0; i < c; i++){
+  const tempArr = arr[i][1];
+  for (let j = 0; j < tempArr.length; j++) {
+    const bigIdx = tempArr.findIndex(e => e > tempArr[j]);
+    if (bigIdx > j || bigIdx === -1) continue;
+    const small = tempArr.splice(j, 1);
+    arr[i][2] += j - bigIdx;
+    tempArr.splice(bigIdx, 0, small[0]);
+  }
 }
-answer = [...map].sort((a, b) => b[1] - a[1]);
+const answer = arr.map(([type, __dirname, cnt]) => `${type} ${cnt}`).join('\n');
 
-console.log(
-  answer.filter((e) => e[1] === answer[0][1]).length > 1 ? "?" : answer[0][0]
-);
+
+console.log(answer)
