@@ -1,13 +1,19 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n');
+const input = require("fs")
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/example.txt"
+  )
+  .toString()
+  .trim()
+  .split("\n");
 
 const n = +input.shift();
 const m = +input.shift();
-const road = Array.from({ length: n }, (_, i) => input[i].split(' ').map(Number));
-const path = input[n].split(' ').map(e => +e - 1);
+const road = Array.from({ length: n }, (_, i) =>
+  input[i].split(" ").map(Number)
+);
+const path = input[n].split(" ").map((e) => +e - 1);
 let tripped = Array.from({ length: n }, (_, i) => i);
-let answer = 'YES';
+let answer = "YES";
 
 if (path.length === 1) console.log("YES");
 else {
@@ -31,8 +37,8 @@ else {
     }
   }
 
-  for (let i = 0; i < m - 1; i++){
-    if (find(tripped, path[i]) !== find(tripped, path[i + 1])) answer = 'NO';
+  for (let i = 0; i < m - 1; i++) {
+    if (find(tripped, path[i]) !== find(tripped, path[i + 1])) answer = "NO";
   }
   console.log(answer);
 }
