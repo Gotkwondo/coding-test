@@ -94,7 +94,7 @@ const obj = {
       }
     }
     return arr;
-  }
+  }   
 };
 
 const copyArray = (arr) => {
