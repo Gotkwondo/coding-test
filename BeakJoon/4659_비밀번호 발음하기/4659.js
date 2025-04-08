@@ -1,19 +1,24 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n').map(e => e.trim());
+const input = require("fs")
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/example.txt"
+  )
+  .toString()
+  .trim()
+  .split("\n")
+  .map((e) => e.trim());
 
 let answer = [];
 
 const checkMou = (st) => {
-  const aeiou = (/[aeiou]/).test(st);
+  const aeiou = /[aeiou]/.test(st);
   return aeiou;
-}
+};
 
 const checkTriple = (st) => {
   let aCnt = 0;
   let cnt = 0;
   for (let s of st) {
-    if ((/[aeiou]/).test(s)) {
+    if (/[aeiou]/.test(s)) {
       cnt = 0;
       aCnt += 1;
     } else {
@@ -24,7 +29,7 @@ const checkTriple = (st) => {
     if (aCnt === 3 || cnt === 3) return false;
   }
   return true;
-}
+};
 
 const checkDouble = (st) => {
   const sInfo = { text: st[0], cnt: 0 };
@@ -35,15 +40,15 @@ const checkDouble = (st) => {
       sInfo.text = s;
       sInfo.cnt = 1;
     }
-    if (sInfo.cnt === 2 && !(sInfo.text === 'e' || sInfo.text === 'o')) {
+    if (sInfo.cnt === 2 && !(sInfo.text === "e" || sInfo.text === "o")) {
       return false;
     }
   }
   return true;
-}
+};
 
 for (let st of input) {
-  if (st === 'end') break;
+  if (st === "end") break;
   const mou = checkMou(st);
   const triple = checkTriple(st);
   const double = checkDouble(st);
@@ -54,4 +59,4 @@ for (let st of input) {
   }
 }
 
-console.log(answer.join('\n'))
+console.log(answer.join("\n"));
