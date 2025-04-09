@@ -1,14 +1,19 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n').map(e => e.trim());
+const input = require("fs")
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/example.txt"
+  )
+  .toString()
+  .trim()
+  .split("\n")
+  .map((e) => e.trim());
 
-const [l, s] = input.shift().split(' ').map(Number);
+const [l, s] = input.shift().split(" ").map(Number);
 let map = Array.from({ length: 101 }, () => 0);
 let road = new Map();
 let que = [1];
 
 for (let st of input) {
-  const [s, e] = st.split(' ').map(Number);
+  const [s, e] = st.split(" ").map(Number);
   road.set(s, e);
 }
 
