@@ -1,32 +1,39 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : __dirname + '/example.txt')
-  .toString().trim().split('\n').map(e => e.trim());
+const input = require("fs")
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/example.txt"
+  )
+  .toString()
+  .trim()
+  .split("\n")
+  .map((e) => e.trim());
 
 const s = input.shift();
-const t = input.shift().split('');
-// let flag = false;
+const t = input.shift().split("");
 let answer = 0;
 
-const dfs = (arr, len) => {
+const check = (arr, len) => {
   if (len === s.length) {
-    if (arr.join('') === s) answer = 1;
+    if (arr.join("") === s) answer = 1;
     return;
-  }
-  else {
+  } else {
     if (arr[len - 1] === "A") {
       const newArr = [...arr];
       newArr.pop();
-      dfs(newArr, len - 1);
+      check(newArr, len - 1);
     }
     if (arr[0] === "B") {
       const newArr = [...arr].reverse();
       newArr.pop();
-      dfs(newArr, len - 1);
+      check(newArr, len - 1);
     }
   }
-}
-dfs(t, t.length);
+};
+check(t, t.length);
 console.log(answer);
+
+// 실패한 코드
+
+// let flag = false;
 // const a = (st) => {
 //   if (flag || st.length === t.length) {
 //     if (st === t) flag = true;
