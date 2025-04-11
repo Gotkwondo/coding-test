@@ -65,7 +65,7 @@ for (let room of roomList) {
   answer += `${room.roomState}\n`;
   room.sortName();
   for (let name of room.nameList) {
-    answer += `${name.join(' ')}\n`;
+    answer += `${name.join(" ")}\n`;
   }
 }
 
