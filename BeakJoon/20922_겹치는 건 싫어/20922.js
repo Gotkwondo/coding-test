@@ -7,8 +7,8 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, k] = input.shift().split(' ').map(Number);
-const numArr = input[0].split(' ').map(Number);
+const [n, k] = input.shift().split(" ").map(Number);
+const numArr = input[0].split(" ").map(Number);
 let [lp, rp] = [0, 0];
 let answer = 0;
 let map = new Map();
