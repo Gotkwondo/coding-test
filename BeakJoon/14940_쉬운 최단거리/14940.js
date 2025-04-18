@@ -7,14 +7,21 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, m] = input.shift().split(' ').map(Number);
-const map = input.map(e => e.split(' ').map(Number));
-const result = Array.from({ length: n }, () => Array.from({ length: m }, () => -1));
-const dir = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const [n, m] = input.shift().split(" ").map(Number);
+const map = input.map((e) => e.split(" ").map(Number));
+const result = Array.from({ length: n }, () =>
+  Array.from({ length: m }, () => -1)
+);
+const dir = [
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+];
 
 let que = [];
 let flag = false;
-for (let i = 0; i < n; i++){
+for (let i = 0; i < n; i++) {
   if (!flag) {
     for (let j = 0; j < m; j++) {
       if (map[i][j] === 2) {
@@ -43,10 +50,10 @@ while (que.length) {
   }
 }
 
-for (let i = 0; i < n; i++){
-  for (let j = 0; j < m; j++){
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
     if (map[i][j] === 0) result[i][j] = 0;
   }
 }
 
-console.log(result.map(e => e.join(' ')).join('\n'));
+console.log(result.map((e) => e.join(" ")).join("\n"));
