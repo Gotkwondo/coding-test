@@ -11,12 +11,12 @@ const n = +input.shift();
 const arr = input.map(Number);
 const max = Math.max(...arr);
 const dp = Array.from({ length: max + 1 }, () => 1);
-let answer = '';
+let answer = "";
 
-for (let i = 2; i < dp.length; i++) { 
+for (let i = 2; i < dp.length; i++) {
   dp[i] += dp[i - 2];
 }
-for (let i = 3; i < dp.length; i++) { 
+for (let i = 3; i < dp.length; i++) {
   dp[i] += dp[i - 3];
 }
 
