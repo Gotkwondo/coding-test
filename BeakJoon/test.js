@@ -7,21 +7,46 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const n = +input.shift();
-const arr = input.map(Number);
-const max = Math.max(...arr);
-const dp = Array.from({ length: max + 1 }, () => 1);
-let answer = '';
+const gear = input.slice(0, 4).map(e => e.split('').map(Number));
+const k = Number(input[4]);
+const order = input.slice(5).map(e => e.split(' ').map(Number));
 
-for (let i = 2; i < dp.length; i++) { 
-  dp[i] += dp[i - 2];
-}
-for (let i = 3; i < dp.length; i++) { 
-  dp[i] += dp[i - 3];
+const rotateR = (gear) => {
+  const tempAry = [gear[7], ...gear.slice(0, 7)];
+  return tempAry;
+};
+
+const rotateL = (gear) => {
+  const tempAry = [...gear.slice(1), gear[0]];
+  return tempAry;
+};
+
+for (let i = 0; i < k; i++){
+  const [gearNumber, orderType] = order[i];
+  const dir = Array.from({ length: 4 }, () => 0);
+  dir[gearNumber - 1] = orderType;
+  // 왼쪽
+  for (let j = gearNumber - 1; j > 0; j--) {
+    if (gear[j][6] !== gear[j - 1][2]) {
+      dir[j - 1] = -dir[j];
+    } else {
+      break;
+    }
+  }
+
+  // 오른쪽
+  for (let j = gearNumber - 1; j < 3; j++) {
+    if (gear[j][2] !== gear[j + 1][6]) {
+      dir[j + 1] = -dir[j];
+    } else {
+      break;
+    }
+  }
+
+  for (let j = 0; j < 4; j++){
+    if (dir[j] === 1) gear[j] = rotateR(gear[j]);
+    else if (dir[j] === -1) gear[j] = rotateL(gear[j]);
+  }
 }
 
-for (let t of arr) {
-  answer += `${dp[t]}\n`;
-}
-
-console.log(answer);
+console.log([1, 2, 4, 8].reduce((acc, cur, idx) => acc + (cur * gear[idx][0]), 0));
