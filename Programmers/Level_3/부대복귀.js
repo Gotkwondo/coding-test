@@ -1,27 +1,24 @@
 function solution(n, roads, sources, destination) {
-  const answer = [];
-  const road = Array.from({ length: n + 1 }, () => []);
-  const level = Array.from({ length: n + 1 }, () => Infinity);
-  const que = [destination];
-  roads.forEach(([st, ed], i) => {
-    road[st].push(ed);
-    road[ed].push(st);
-  })
+    const level = Array.from({length: n + 1}, () => Infinity);
+    const map = {};
+    const que = [destination];
+    level[destination] = 0;
     
-  level[destination] = 0;
-    
-  while (que.length > 0) {
-    const cur = que.shift();
-    for (let i = 0; i < road[cur].length; i++) {
-      if (level[cur] + 1 < level[road[cur][i]]) {
-        level[road[cur][i]] = level[cur] + 1;
-        que.push(road[cur][i]);
-      }
+    for(let [s, e] of roads){
+        if(!map[s]) map[s] = [];
+        if(!map[e]) map[e] = [];
+        map[s].push(e);
+        map[e].push(s);
     }
-  }
     
-  sources.forEach(e => {
-    answer.push(level[e] === Infinity ? -1 : level[e]);
-  })
-  return answer;
+    while(que.length){
+        const man = que.shift();
+        for(let temp of map[man] ?? []){
+            if(level[man] + 1 < level[temp]){
+                level[temp] = level[man] + 1;
+                que.push(temp)
+            }
+        }
+    }
+    return sources.map(e => level[e] === Infinity ? -1 : level[e]);
 }
