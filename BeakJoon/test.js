@@ -6,105 +6,180 @@ const input = require("fs")
   .trim()
   .split("\n")
   .map((e) => e.trim());
-let answer = [];
 
-for (let line of input) {
-  if (line === "end") break;
-  const l = line.split("");
-  let xCnt = 0;
-  let oCnt = 0;
-  let dCnt = 0;
-  const goal = {
-    X: 0,
-    O: 0,
-  };
-  for (let i = 0; i < 9; i++) {
-    if (l[i] === "X") xCnt += 1;
-    else if (l[i] === "O") oCnt += 1;
-    else dCnt += 1;
-  }
-
-  if (oCnt > xCnt || xCnt - 1 > oCnt) {
-    answer.push("invalid");
-    continue;
-  }
-
-  for (let i = 0; i < 3; i++) {
-    if (
-      l[i * 3] === l[i * 3 + 1] &&
-      l[i * 3] === l[i * 3 + 2] &&
-      l[i * 3] !== "."
-    ) {
-      goal[l[i * 3]] += 1;
-    }
-    if (l[i] === l[i + 3] && l[i] === l[i + 6] && l[i] !== ".") {
-      goal[l[i]] += 1;
-    }
-  }
-  if (l[0] === l[4] && l[4] === l[8] && l[4] !== ".") {
-    goal[l[4]] += 1;
-  }
-  if (l[2] === l[4] && l[4] === l[6] && l[4] !== ".") {
-    goal[l[4]] += 1;
-  }
-
-  if (goal.O && goal.X) {
-    answer.push("invalid");
-    continue;
-  } else if (goal.X && xCnt !== oCnt + 1) {
-    answer.push("invalid");
-    continue;
-  } else if (goal.O && xCnt !== oCnt) {
-    answer.push("invalid");
-    continue;
-  } else if (goal.O === 0 && goal.X === 0) {
-    answer.push(dCnt ? "invalid" : "valid");
-    continue;
-  } else {
-    answer.push("valid");
+const [n, m] = input.shift().split(' ');
+const map = input.map(line => line.split(' '));
+const cam = [];
+let zero = 0;
+for (let i = 0; i < n; i++){
+  for (let j = 0; j < m; j++){
+    if (map[i][j] === '0') zero += 1;
+    else if (map[i][j] === '6') continue;
+    else cam.push([i, j, map[i][j]]);
   }
 }
-console.log(answer.join("\n"));
-const gear = input.slice(0, 4).map(e => e.split('').map(Number));
-const k = Number(input[4]);
-const order = input.slice(5).map(e => e.split(' ').map(Number));
+let answer = 0;
 
-const rotateR = (gear) => {
-  const tempAry = [gear[7], ...gear.slice(0, 7)];
-  return tempAry;
-};
-
-const rotateL = (gear) => {
-  const tempAry = [...gear.slice(1), gear[0]];
-  return tempAry;
-};
-
-for (let i = 0; i < k; i++){
-  const [gearNumber, orderType] = order[i];
-  const dir = Array.from({ length: 4 }, () => 0);
-  dir[gearNumber - 1] = orderType;
-  // 왼쪽
-  for (let j = gearNumber - 1; j > 0; j--) {
-    if (gear[j][6] !== gear[j - 1][2]) {
-      dir[j - 1] = -dir[j];
-    } else {
-      break;
+const copyMap = (map) => {
+  const newMap = Array.from({ length: n }, () => Array.from({ length: m }, () => '0'));
+  for (let i = 0; i < n; i++){
+    for (let j = 0; j < m; j++){
+      if (map[i][j] === '0') continue;
+      else newMap[i][j] = map[i][j];
     }
   }
+  return newMap;
+}
 
-  // 오른쪽
-  for (let j = gearNumber - 1; j < 3; j++) {
-    if (gear[j][2] !== gear[j + 1][6]) {
-      dir[j + 1] = -dir[j];
-    } else {
-      break;
+const search = {
+  up: (y, x, checkMap) => {
+    let curY = y - 1;
+    let cnt = 0;
+    while (curY >= 0) {
+      if (checkMap[curY][x] === '0') {
+        checkMap[curY][x] = '#';
+        cnt += 1;
+        curY -= 1;
+      } else if (checkMap[curY][x] === '6') {
+        break;
+      } else curY -= 1;
     }
-  }
-
-  for (let j = 0; j < 4; j++){
-    if (dir[j] === 1) gear[j] = rotateR(gear[j]);
-    else if (dir[j] === -1) gear[j] = rotateL(gear[j]);
+    return cnt;
+  },
+  right: (y, x, checkMap) => {
+    let curX = x + 1;
+    let cnt = 0;
+    while (curX < m) {
+      if (checkMap[y][curX] === '0') {
+        checkMap[y][curX] = '#';
+        cnt += 1;
+        curX += 1;
+      } else if (checkMap[y][curX] === '6') {
+        break;
+      } else curX += 1;
+    }
+    return cnt;
+  },
+  left: (y, x, checkMap) => {
+    let curX = x - 1;
+    let cnt = 0;
+    while (curX >= 0) {
+      if (checkMap[y][curX] === '0') {
+        checkMap[y][curX] = '#';
+        cnt += 1;
+        curX -= 1;
+      } else if (checkMap[y][curX] === '6') {
+        break;
+      } else curX -= 1;
+    }
+    return cnt;
+  },
+  down: (y, x, checkMap) => {
+    let curY = y + 1;
+    let cnt = 0;
+    while (curY < n) {
+      if (checkMap[curY][x] === '0') {
+        checkMap[curY][x] = '#';
+        cnt += 1;
+        curY += 1;
+      } else if (checkMap[curY][x] === '6') {
+        break;
+      } else curY += 1;;
+    }
+    return cnt;
   }
 }
 
-console.log([1, 2, 4, 8].reduce((acc, cur, idx) => acc + (cur * gear[idx][0]), 0));
+const dfs = (cnt, depth, copiedMap) => {
+  if (depth === cam.length) {
+    answer = Math.max(answer, cnt);
+    return;
+  }
+
+  const [cy, cx, type] = cam[depth];
+  if (type === '1') {
+    for (let i = 0; i < 4; i++){
+      const newMap = copyMap(copiedMap);
+      if (i === 0) {
+        let newCnt = search.up(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 1) {
+        let newCnt = search.right(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 2) {
+        let newCnt = search.down(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 3) {
+        let newCnt = search.left(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+    }
+  }
+  else if (type === '2') {
+    for (let i = 0; i < 2; i++){
+      const newMap = copyMap(copiedMap);
+      if (i === 0) {
+        let newCnt = search.up(cy, cx, newMap) + search.down(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 1) {
+        let newCnt = search.right(cy, cx, newMap) + search.left(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+    }
+  }
+  else if (type === '3') {
+    for (let i = 0; i < 4; i++){
+      const newMap = copyMap(copiedMap);
+      if (i === 0) {
+        let newCnt = search.up(cy, cx, newMap) + search.right(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 1) {
+        let newCnt = search.down(cy, cx, newMap) + search.right(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 2) {
+        let newCnt = search.down(cy, cx, newMap) + search.left(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 3) {
+        let newCnt = search.up(cy, cx, newMap) + search.left(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+    }
+  }
+  else if (type === '4') {
+    for (let i = 0; i < 4; i++){
+      const newMap = copyMap(copiedMap);
+      if (i === 0) {
+        let newCnt = search.up(cy, cx, newMap) + search.left(cy, cx, newMap) + search.right(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 1) {
+        let newCnt = search.up(cy, cx, newMap) + search.right(cy, cx, newMap) + search.down(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 2) {
+        let newCnt = search.down(cy, cx, newMap) + search.left(cy, cx, newMap) + search.right(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+      else if (i === 3) {
+        let newCnt = search.up(cy, cx, newMap) + search.left(cy, cx, newMap) + search.down(cy, cx, newMap);
+        dfs(cnt + newCnt, depth + 1, newMap);
+      }
+    }
+  }
+  else if (type === '5') {
+    const newMap = copyMap(copiedMap);
+    let newCnt = search.up(cy, cx, newMap) + search.left(cy, cx, newMap) + search.down(cy, cx, newMap) + search.right(cy, cx, newMap);
+    dfs(cnt + newCnt, depth + 1, newMap);
+  }
+}
+
+dfs(0, 0, map);
+
+console.log(zero - answer);
