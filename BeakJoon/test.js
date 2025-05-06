@@ -7,79 +7,63 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, m, k] = input.shift().split(" ").map(Number);
-const food = input.slice(0, n).map(e => e.split(' ').map(Number));
-const trees = input.slice(n, input.length + 1).map(e => e.split(' ').map(Number));
-const map = Array.from({ length: n }, () => Array.from({ length: n }, () => { return { food: 5, tree: [], dead: [] } }));
-const dir = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
+const [n, l, r] = input.shift().split(" ").map(Number);
+let map = input.map((e) => e.split(" ").map(Number));
+const dir = [
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+  [0, 1],
+];
+let year = 0;
 
-for (let [y, x, age] of trees) {
-  map[y - 1][x - 1].tree.push(age);
-}
+while (true) {
+  const copyMap = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (__, idx) => map[i][idx]));
+  const visited = new Set();
+  let isUnion = false;
 
-const spring = () => {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      map[i][j].tree.sort((a, b) => a - b);
-      const newTrees = [];
-      for (let k = 0; k < map[i][j].tree.length; k++) {
-        const t = map[i][j].tree[k];
-        if (map[i][j].food >= t) {
-          map[i][j].food -= t;
-          newTrees.push(t + 1);
-        } else {
-          map[i][j].dead.push(t);
-        }
-      }
-      map[i][j].tree = newTrees;
-    }
-  }
-};
-
-const summer = () => {
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (map[i][j].dead.length === 0) continue;
-      let sum = 0;
-      for (let d of map[i][j].dead) {
-        sum += (Math.floor(d / 2));
-      }
-      map[i][j].food += sum;
-      map[i][j].dead = [];
-    }
-  }
-};
-
-const autumn = () => {
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      for (let t of map[i][j].tree) {
-        if (t % 5 === 0) {
-          for (let [dy, dx] of dir) {
-            const [ny, nx] = [i + dy, j + dx];
-            if (ny >= 0 && ny < n && nx >= 0 && nx < n) {
-              map[ny][nx].tree.push(1);
+      if (visited.has(`${i}_${j}`)) continue;
+      const union = new Set();
+      const que = [[i, j]];
+      let total = 0;
+      while (que.length) {
+        const [cy, cx] = que.shift();
+        for (const [dy, dx] of dir) {
+          const [ny, nx] = [cy + dy, cx + dx];
+          if (ny >= 0 && ny < n && nx >= 0 && nx < n) {
+            const diff = Math.abs(map[cy][cx] - map[ny][nx]);
+            if (diff >= l && diff <= r) {
+              if (!union.has(`${cy}_${cx}`) && !visited.has(`${cy}_${cx}`)) {
+                union.add(`${cy}_${cx}`);
+                visited.add(`${cy}_${cx}`);
+                total += map[cy][cx];
+              }
+              if (!union.has(`${ny}_${nx}`) && !visited.has(`${ny}_${nx}`)) {
+                union.add(`${ny}_${nx}`);
+                visited.add(`${ny}_${nx}`);
+                total += map[ny][nx];
+                que.push([ny, nx]);
+              }
             }
           }
         }
       }
+
+      if (union.size === 0) continue;
+      else {
+        union.forEach((value) => {
+          const [y, x] = value.split("_").map(Number);
+          copyMap[y][x] = Math.floor(total / union.size);
+        });
+        isUnion = true;
+      }
     }
   }
-};
-
-const winter = () => {
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      map[i][j].food += food[i][j];
-    }
-  }
-};
-
-for (let i = 0; i < k; i++){
-  spring();
-  summer();
-  autumn();
-  winter();
+  
+  if (!isUnion) break;
+  map = copyMap;
+  year += 1;
 }
-
-console.log(map.reduce((acc, cur) => acc + cur.reduce((ac, cu) => ac + cu.tree.length, 0), 0));
+console.log(year);
