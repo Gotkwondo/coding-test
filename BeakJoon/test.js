@@ -7,51 +7,52 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, m, h] = input.shift().split(' ').map(Number);
-const ladders = input.map(e => e.split(' ').map(Number));
-const map = Array.from({ length: h + 1 }, () => Array.from({ length: n + 1 }, () => false));
+// n = 가로 세로 길이, m = 치킨집의 최대 갯수
+const [n, m] = input.shift().split(" ").map(Number);
+const map = input.map((e) => e.split(" ").map(Number));
+const houses = [];
+const chickens = [];
+const chickenCheck = [];
 let answer = Infinity;
 
-for (let [a, b] of ladders) {
-  map[a][b] = true;
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    if (map[i][j] === 1) houses.push([i, j]);
+    else if (map[i][j] === 2) {
+      chickens.push([i, j]);
+      chickenCheck.push(false);
+    }
+  }
 }
 
-const check = () => {
-  for (let i = 1; i <= n; i++) {
-    let idx = i;
-    for (let j = 1; j <= h; j++) {
-      if (map[j][idx]) idx++;
-      else if (map[j][idx - 1]) idx--;
-    }
-    if (idx !== i) return false;
-  }
-  return true;
+const calcDistance = ([cy, cx], [hy, hx]) => {
+  return Math.abs(cy - hy) + Math.abs(cx - hx);
 };
 
-/**
- * @param {number} depth 추가로 설치된 사다리 갯수
- * @param {number} line 현재 사라다리의 깊이(행)
- */
-const dfs = (depth, max) => {
-  if (answer <= max) return;
-  if (max === depth) {
-    if (check() && answer > depth) answer = depth;
+const dfs = (depth, index) => {
+  if (depth === m) {
+    let sum = 0;
+    for (let house of houses) {
+      let min = Infinity;
+      for (let c = 0; c < chickenCheck.length; c++) {
+        if (!chickenCheck[c]) continue; 
+        const chicken = chickens[c];
+        const distance = calcDistance(chicken, house);
+        if (distance < min) min = distance;
+      }
+      sum += min;
+    }
+    if (answer > sum) answer = sum;
     return;
   }
-  
-  for (let j = 1; j < n; j++) {
-    // 사다리는 왼쪽에서 오른쪽으로 연결되는 방식으로 놓을 예정이니 n - 1까지 진행
-    for (let i = 1; i <= h; i++) {
-      if (map[i][j] || map[i][j - 1] || map[i][j + 1]) continue;
-      map[i][j] = true;
-      dfs(depth + 1, max);
-      map[i][j] = false;
-      while (i <= h && !map[i][j + 1] && !map[i][j - 1]) i++;
+  for (let i = index; i < chickenCheck.length; i++){
+    if (!chickenCheck[i]) {
+      chickenCheck[i] = true;
+      dfs(depth + 1, i);
+      chickenCheck[i] = false;
     }
   }
-  
 };
-for (let i = 0; i < 4; i++){
-  dfs(0, i);
-}
-console.log(answer === Infinity ? -1 : answer);
+
+dfs(0, 0);
+console.log(answer)
