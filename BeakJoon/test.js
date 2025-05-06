@@ -7,46 +7,51 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, k, p, x] = input[0].split(' ').map(Number);
-const segments = {
-  0: [1, 1, 1, 0, 1, 1, 1],
-  1: [0, 0, 1, 0, 0, 1, 0],
-  2: [1, 0, 1, 1, 1, 0, 1],
-  3: [1, 0, 1, 1, 0, 1, 1],
-  4: [0, 1, 1, 1, 0, 1, 0],
-  5: [1, 1, 0, 1, 0, 1, 1],
-  6: [1, 1, 0, 1, 1, 1, 1],
-  7: [1, 0, 1, 0, 0, 1, 0],
-  8: [1, 1, 1, 1, 1, 1, 1],
-  9: [1, 1, 1, 1, 0, 1, 1]
+const [n, m, h] = input.shift().split(' ').map(Number);
+const ladders = input.map(e => e.split(' ').map(Number));
+const map = Array.from({ length: h + 1 }, () => Array.from({ length: n + 1 }, () => false));
+let answer = Infinity;
+
+for (let [a, b] of ladders) {
+  map[a][b] = true;
+}
+
+const check = () => {
+  for (let i = 1; i <= n; i++) {
+    let idx = i;
+    for (let j = 1; j <= h; j++) {
+      if (map[j][idx]) idx++;
+      else if (map[j][idx - 1]) idx--;
+    }
+    if (idx !== i) return false;
+  }
+  return true;
 };
-let answer = 0;
-const len = String(n).length;
 
-const diff = (a, b) => {
-  const seg1 = segments[a];
-  const seg2 = segments[b];
-  let cnt = 0;
-
-  for (let i = 0; i < 7; i++){
-    if (seg1[i] !== seg2[i]) cnt += 1;
+/**
+ * @param {number} depth 추가로 설치된 사다리 갯수
+ * @param {number} line 현재 사라다리의 깊이(행)
+ */
+const dfs = (depth, max) => {
+  if (answer <= max) return;
+  if (max === depth) {
+    if (check() && answer > depth) answer = depth;
+    return;
   }
-  return cnt;
-}
-
-const toDigits = (num, length) => {
-  return String(num).padStart(length, '0').split('').map(Number);
-}
-
-for (let floor = 1; floor <= n; floor++){
-  if (floor === x) continue;
-  const origin = toDigits(x, len);
-  const variation = toDigits(floor, len);
-  let cnt = 0;
-  for (let i = 0; i < len; i++){
-    cnt += (diff(origin[i], variation[i]));
-    if (cnt > p) break;
+  
+  for (let j = 1; j < n; j++) {
+    // 사다리는 왼쪽에서 오른쪽으로 연결되는 방식으로 놓을 예정이니 n - 1까지 진행
+    for (let i = 1; i <= h; i++) {
+      if (map[i][j] || map[i][j - 1] || map[i][j + 1]) continue;
+      map[i][j] = true;
+      dfs(depth + 1, max);
+      map[i][j] = false;
+      while (i <= h && !map[i][j + 1] && !map[i][j - 1]) i++;
+    }
   }
-  if (cnt <= p) answer += 1;
+  
+};
+for (let i = 0; i < 4; i++){
+  dfs(0, i);
 }
-console.log(answer);
+console.log(answer === Infinity ? -1 : answer);
