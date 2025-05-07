@@ -7,63 +7,64 @@ const input = require("fs")
   .split("\n")
   .map((e) => e.trim());
 
-const [n, l, r] = input.shift().split(" ").map(Number);
-let map = input.map((e) => e.split(" ").map(Number));
-const dir = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1],
-];
-let year = 0;
+const n = +input.shift();
+const numbers = input.shift().split(' ').map(Number);
+const ary = input.shift().split(" ").map(Number);
+const signType = ["+", "-", "*", "/"];
+const calcSign = {
+  "+": (a, b) => a + b,
+  "-": (a, b) => a - b,
+  "*": (a, b) => a * b,
+  "/": (a, b) => {
+    if((a > 0 && b > 0) || (a < 0 && b < 0)) return Math.floor(Math.abs(a) / Math.abs(b))
+    else if (a === 0 || b === 0) return 0;
+    else return Math.floor(Math.abs(a) / Math.abs(b)) * -1;
+  },
+};
+let signCnt = 0;
+let answer = [-Infinity, Infinity];
 
-while (true) {
-  const copyMap = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (__, idx) => map[i][idx]));
-  const visited = new Set();
-  let isUnion = false;
+for (let i = 0; i < ary.length; i++) {
+  signCnt += ary[i];
+}
 
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (visited.has(`${i}_${j}`)) continue;
-      const union = new Set();
-      const que = [[i, j]];
-      let total = 0;
-      while (que.length) {
-        const [cy, cx] = que.shift();
-        for (const [dy, dx] of dir) {
-          const [ny, nx] = [cy + dy, cx + dx];
-          if (ny >= 0 && ny < n && nx >= 0 && nx < n) {
-            const diff = Math.abs(map[cy][cx] - map[ny][nx]);
-            if (diff >= l && diff <= r) {
-              if (!union.has(`${cy}_${cx}`) && !visited.has(`${cy}_${cx}`)) {
-                union.add(`${cy}_${cx}`);
-                visited.add(`${cy}_${cx}`);
-                total += map[cy][cx];
-              }
-              if (!union.has(`${ny}_${nx}`) && !visited.has(`${ny}_${nx}`)) {
-                union.add(`${ny}_${nx}`);
-                visited.add(`${ny}_${nx}`);
-                total += map[ny][nx];
-                que.push([ny, nx]);
-              }
-            }
-          }
-        }
-      }
+const aryCopy = (ary) => {
+  const temp = [];
+  for (let n of ary) {
+    temp.push(n);
+  }
+  return temp;
+};
 
-      if (union.size === 0) continue;
-      else {
-        union.forEach((value) => {
-          const [y, x] = value.split("_").map(Number);
-          copyMap[y][x] = Math.floor(total / union.size);
-        });
-        isUnion = true;
-      }
+const calc = (signAry) => {
+  let result = numbers[0];
+  for (let i = 0; i < signAry.length; i++) {
+    const sign = signAry[i];
+    result = calcSign[sign](result, numbers[i + 1]);
+  }
+  return result;
+}
+
+const dfs = (depth, signAry) => {
+  if (depth === signCnt) {
+    const result = calc(signAry);
+    if (answer[0] < result) answer[0] = result;
+    if (answer[1] > result) answer[1] = result;
+    return;
+  }
+  else {
+    for (let i = 0; i < 4; i++){
+      if (ary[i] === 0) continue;
+      const sign = signType[i];
+      const newSignAry = aryCopy(signAry);
+      newSignAry.push(sign);
+      ary[i] -= 1;
+      dfs(depth + 1, newSignAry);
+      ary[i] += 1;
     }
   }
-  
-  if (!isUnion) break;
-  map = copyMap;
-  year += 1;
 }
-console.log(year);
+
+dfs(0, []);
+
+console.log(answer.join('\n'))
