@@ -25,8 +25,8 @@ const score = {
   1: 1,
   2: 10,
   3: 100,
-  4: 1000
-}
+  4: 1000,
+};
 let answer = 0;
 
 for (let i = 0; i < input.length; i++) {
@@ -64,8 +64,10 @@ for (let i = 0; i < students.length; i++) {
         (favoriteCount === max &&
           (emptyCount > maxNear ||
             (emptyCount === maxNear &&
-              (maxPos.length === 0 || y < maxPos[0] || (y === maxPos[0] && x < maxPos[1]))))
-      )) {
+              (maxPos.length === 0 ||
+                y < maxPos[0] ||
+                (y === maxPos[0] && x < maxPos[1])))))
+      ) {
         max = favoriteCount;
         maxPos = [y, x];
         maxNear = emptyCount;
@@ -77,8 +79,7 @@ for (let i = 0; i < students.length; i++) {
   pos[st - 1] = maxPos;
 }
 
-
-
+// 이건 타입에러 난 코드 => 첫 번째 값을 할당할 때 인덱싱이 잘못됨
 // for (let i = 0; i < students.length; i++) {
 //   const { st, favorite } = students[i];
 //   // if (i === 0) {
